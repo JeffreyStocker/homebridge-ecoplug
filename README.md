@@ -29,13 +29,38 @@ Configuration sample:
         "platforms": [
             {
                 "platform": "EcoPlug",
-                "name": "EcoPlug"
+                "name": "EcoPlug",
+
             }
         ]
 ```
 ## Optional parameters
 
-- None
+"port": [9000] incoming port, must be open to discover devices and recieve messages, default is 9000.
+
+```
+    "platforms": [
+        {
+            "port": 9000 //incoming port, must be open
+        }
+    ]
+```
+
+
+# Firewalls
+
+Please ensure that the any firewalls are set to allow port 9000 incoming, and port 25 outgoing
+
+```
+//Example using UFW
+
+//allows incoming message on port 9000
+sudo ufw allow incoming 9000
+
+//allows outgoing messages on port 25
+sudo ufw allow outgoing 25
+
+```
 
 #Credits
 

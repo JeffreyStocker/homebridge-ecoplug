@@ -12,6 +12,15 @@
 				"required": true,
 				"default": "EcoPlug",
 				"description": "Plugin name as displayed in the Homebridge log"
+			},
+			"port": {
+				"title": "Port",
+				"type": "number",
+				"required": true,
+				"default": 9000,
+				"description": "Port used for outgoing communication with ecoplugs",
+				"minimum": 0,
+        "maximum": 65535
 			}
 		}
 	}
