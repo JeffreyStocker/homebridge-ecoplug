@@ -13,6 +13,9 @@ var debug = require('debug')('EcoPlug');
 var Accessory, Service, Characteristic, UUIDGen, HAPServer;
 var accessories = [];
 
+//default configuration
+const defaultIncomingPort = 9000;
+
 module.exports = function(homebridge) {
 
   Accessory = homebridge.platformAccessory;
@@ -28,6 +31,7 @@ function EcoPlugPlatform(log, config, api) {
   this.log = log;
   this.cache_timeout = 10; // seconds
   this.refresh = config['refresh'] || 10; // Update every 10 seconds
+  this.config = config;
 
   if (api) {
     this.api = api;
@@ -45,7 +49,7 @@ EcoPlugPlatform.prototype.configureAccessory = function(accessory) {
 
 EcoPlugPlatform.prototype.didFinishLaunching = function() {
 
-  eco.startUdpServer(this, function(message) {
+  eco.startUdpServer(this, this.config.port = defaultIncomingPort, function(message) {
     // handle status messages received from devices
 
     var accessory = accessories[message.id];
