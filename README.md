@@ -44,12 +44,12 @@ port | 9000 | false | incoming port, must be open on the device to discover devi
 
 # Firewalls
 
-Please ensure that the any firewalls are set to allow port 9000 incoming, and port 25 outgoing
+Please ensure that the any firewalls are set to allow port 9000 incoming or the port that is defined in the configuration parameter "port", and port 25 outgoing
 
 ```
 //Example using UFW
 
-//allows incoming message on port 9000
+//allows incoming message on port 9000 or the port that is defined in the configuration parameter "port"
 sudo ufw allow incoming 9000
 
 //allows outgoing messages on port 25
