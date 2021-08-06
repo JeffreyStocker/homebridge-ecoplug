@@ -26,26 +26,21 @@ on the accessory page of settings on Eve.  It will remove non-responding accesso
 Configuration sample:
 
  ```
-        "platforms": [
-            {
-                "platform": "EcoPlug",
-                "name": "EcoPlug",
-
-            }
-        ]
+"platforms": [
+    {
+        "platform": "EcoPlug",
+        "name": "EcoPlug",
+        "port": 9000
+    }
+]
 ```
-## Optional parameters
+## Parameters
 
-"port": [9000] incoming port, must be open to discover devices and recieve messages, default is 9000.
-
-```
-    "platforms": [
-        {
-            "port": 9000 //incoming port, must be open
-        }
-    ]
-```
-
+Paramenter | Default | Required | Description
+-----------| ------- | -------- | -----------
+platform | EcoPlug | true |
+name | EcoPlug | true | Plugin name as displayed in the Homebridge log
+port | 9000 | false | incoming port, must be open on the device to discover devices and receive messages. Must be between 0 and 65535.
 
 # Firewalls
 
