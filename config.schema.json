@@ -16,7 +16,7 @@
 			"port": {
 				"title": "Port",
 				"type": "number",
-				"required": true,
+				"required": false,
 				"default": 9000,
 				"description": "Port used for outgoing communication with ecoplugs",
 				"minimum": 0,
