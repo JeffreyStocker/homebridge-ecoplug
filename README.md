@@ -25,7 +25,7 @@ on the accessory page of settings on Eve.  It will remove non-responding accesso
 
 Configuration sample:
 
- ```
+ ```JSON
 "platforms": [
     {
         "platform": "EcoPlug",
@@ -44,15 +44,16 @@ port | 9000 | false | incoming port, must be open on the device to discover devi
 
 # Firewalls
 
-Please ensure that the any firewalls are set to allow port 9000 incoming or the port that is defined in the configuration parameter "port", and port 25 outgoing
+Please ensure that the any firewalls are set to allow the port defined in the configuration parameter "port" (default 9000), and port 25 outgoing
 
 ```
 //Example using UFW
 
-//allows incoming message on port 9000 or the port that is defined in the configuration parameter "port"
+//allows incoming messages incoming port (default 9000)
 sudo ufw allow incoming 9000
 
 //allows outgoing messages on port 25
+//needed if blocking outgoing messages
 sudo ufw allow outgoing 25
 
 ```
