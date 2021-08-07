@@ -15,6 +15,8 @@ var accessories = [];
 
 //default configuration
 const defaultIncomingPort = 9000;
+const defaultRefresh = 10; // Update every 10 seconds
+const defaultCacheTimeout = 60; // clear cache every 60 seconds
 
 module.exports = function(homebridge) {
 
@@ -29,8 +31,8 @@ module.exports = function(homebridge) {
 
 function EcoPlugPlatform(log, config, api) {
   this.log = log;
-  this.cache_timeout = 10; // seconds
-  this.refresh = config['refresh'] || 10; // Update every 10 seconds
+  this.cache_timeout = config['cache_timeout'] || defaultCacheTimeout; // seconds
+  this.refresh = config['refresh'] || defaultRefresh; // Update every 10 seconds
   this.config = config;
 
   if (api) {
@@ -59,13 +61,11 @@ EcoPlugPlatform.prototype.didFinishLaunching = function() {
       .updateValue(message.status);
 
     accessory.context.lastUpdated = Date.now();
-
   });
 
-  this.deviceDiscovery();
-  setInterval(this.devicePolling.bind(this), this.refresh * 1000);
-  setInterval(this.deviceDiscovery.bind(this), this.cache_timeout * 6000);
-
+  this.deviceDiscovery(); //initial device discovery
+  setInterval(this.devicePolling.bind(this), convertToMilliseconds(this.refresh)); //polls discovered devices to check their status
+  setInterval(this.deviceDiscovery.bind(this), convertToMilliseconds(this.cache_timeout)); //rechecks for new devices and inactivates inactive ones.
 }
 
 EcoPlugPlatform.prototype.devicePolling = function() {
@@ -190,7 +190,7 @@ EcoPlugPlatform.prototype.sendStatusMessage = function(thisPlug, callback) {
   }.bind(this));
 
   // If no status update received for 3 refresh cycles, mark as not available
-  if (Date.now() - thisPlug.lastUpdated > this.refresh * 3 * 1000) {
+  if (Date.now() - thisPlug.lastUpdated > convertToMilliseconds(this.refresh * 3)) {
     debug("Plug not responding", thisPlug.id, thisPlug.name);
     accessories[thisPlug.id].getService(Service.Outlet)
       .getCharacteristic(Characteristic.On)
@@ -214,4 +214,8 @@ EcoPlugPlatform.prototype.removeAccessory = function(accessory) {
     this.api.unregisterPlatformAccessories("homebridge-ecoplug", "EcoPlug", [accessory]);
     delete accessories[id];
   }
+}
+
+const convertToMilliseconds = function convertToSeconds(seconds) {
+  return seconds * 1000;
 }
