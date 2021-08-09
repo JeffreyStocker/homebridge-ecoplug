@@ -21,6 +21,37 @@
 				"description": "Port used for outgoing communication with ecoplugs",
 				"minimum": 0,
         "maximum": 65535
+			},
+			"refresh": {
+				"title": "Status Polling Interval",
+				"type": "number",
+				"required": false,
+				"description": "How long in seconds to poll devices for changes in their status. Use 0 for never poll device status (not recommended). Default: 10",
+				"placeholder": 10
+			},
+			"cache_timeout": {
+				"title": "Discovery Interval",
+				"type": "number",
+				"required": false,
+				"description": "How long in seconds until Homebridge searches for new devices. Use 0 for never search for new devices (not recommended). Default: 60",
+				"minimum": 0,
+				"placeholder": 60
+			},
+			"deviceRemoveTimeout": {
+				"title": "Remove Device Timeout",
+				"type": "number",
+				"required": false,
+				"description": "How long, in seconds, a device is removed from homebridge. Use 0 to never remove a device. Default: 0",
+				"minimum": 0,
+				"placeholder": 0
+			},
+			"deviceInactiveTimout": {
+				"title": "Set Device to Inactive Timeout",
+				"type": "number",
+				"required": false,
+				"description": "How long in seconds until a device is declared inactive when not responding. Use 0 for never set to inactive. Default: 30",
+				"minimum": 0,
+				"placeholder": 30
 			}
 		}
 	}
