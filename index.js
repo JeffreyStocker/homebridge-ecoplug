@@ -17,6 +17,8 @@ var accessories = [];
 const defaultIncomingPort = 9000;
 const defaultRefresh = 10; // Update every 10 seconds
 const defaultCacheTimeout = 60; // clear cache every 60 seconds
+const defaultDeviceRemoveTimeout = 0; // remove any devices after x number of seconds if is missing, 0 is set to never;
+const defaultDeviceInactiveTimout = 0; // set devices inactive after x number of seconds of no response, 0 is set to never;
 
 module.exports = function(homebridge) {
 
@@ -33,6 +35,8 @@ function EcoPlugPlatform(log, config, api) {
   this.log = log;
   this.cache_timeout = config['cache_timeout'] || defaultCacheTimeout; // seconds
   this.refresh = config['refresh'] || defaultRefresh; // Update every 10 seconds
+  this.removeDeviceTimeout = convertToMilliseconds(config['deviceRemoveTimeout'] || defaultDeviceRemoveTimeout);
+  this.deviceInactiveTimout = convertToMilliseconds(config['deviceInactiveTimout'] || defaultDeviceInactiveTimout);
   this.config = config;
 
   if (api) {
@@ -64,8 +68,8 @@ EcoPlugPlatform.prototype.didFinishLaunching = function() {
   });
 
   this.deviceDiscovery(); //initial device discovery
-  setInterval(this.devicePolling.bind(this), convertToMilliseconds(this.refresh)); //polls discovered devices to check their status
-  setInterval(this.deviceDiscovery.bind(this), convertToMilliseconds(this.cache_timeout)); //rechecks for new devices and inactivates inactive ones.
+  this.refresh > 0 && setInterval(this.devicePolling.bind(this), this.refresh); //polls discovered devices to check their status
+  this.cache_timeout > 0 && setInterval(this.deviceDiscovery.bind(this), this.cache_timeout); //rechecks for new devices and inactivates inactive ones.
 }
 
 EcoPlugPlatform.prototype.devicePolling = function() {
@@ -189,8 +193,13 @@ EcoPlugPlatform.prototype.sendStatusMessage = function(thisPlug, callback) {
     }
   }.bind(this));
 
-  // If no status update received for 3 refresh cycles, mark as not available
-  if (Date.now() - thisPlug.lastUpdated > convertToMilliseconds(this.refresh * 3)) {
+  if ((Date.now() - thisPlug.lastUpdated) > this.deviceRemoveTimeout && this.deviceRemoveTimeout !== 0) {
+    // if not status update have not been recieved after deviceRemoveTimout, remove device
+    debug("Plug not responding. Removing Plug:", thisPlug.id, thisPlug.name);
+    this.removeAccessory(thisPlug);
+
+  } else if ((Date.now() - thisPlug.lastUpdated) > this.deviceInactiveTimout && this.deviceInactiveTimout !== 0) {
+    // If no status update received for 3 refresh cycles, mark as not available
     debug("Plug not responding", thisPlug.id, thisPlug.name);
     accessories[thisPlug.id].getService(Service.Outlet)
       .getCharacteristic(Characteristic.On)
