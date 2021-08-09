@@ -34,7 +34,7 @@ module.exports = function(homebridge) {
 function EcoPlugPlatform(log, config, api) {
   this.log = log;
   this.cache_timeout = config['cache_timeout'] || defaultCacheTimeout; // seconds
-  this.refresh = config['refresh'] || defaultRefresh; // Update every 10 seconds
+  this.refresh = convertToMilliseconds(config['refresh'] || defaultRefresh); // Update every 10 seconds
   this.removeDeviceTimeout = convertToMilliseconds(config['deviceRemoveTimeout'] || defaultDeviceRemoveTimeout);
   this.deviceInactiveTimout = convertToMilliseconds(config['deviceInactiveTimout'] || defaultDeviceInactiveTimout);
   this.config = config;
@@ -196,6 +196,7 @@ EcoPlugPlatform.prototype.sendStatusMessage = function(thisPlug, callback) {
   if ((Date.now() - thisPlug.lastUpdated) > this.deviceRemoveTimeout && this.deviceRemoveTimeout !== 0) {
     // if not status update have not been recieved after deviceRemoveTimout, remove device
     debug("Plug not responding. Removing Plug:", thisPlug.id, thisPlug.name);
+    this.log("Plug not responding. Removing Plug", thisPlug.id, thisPlug.name)
     this.removeAccessory(thisPlug);
 
   } else if ((Date.now() - thisPlug.lastUpdated) > this.deviceInactiveTimout && this.deviceInactiveTimout !== 0) {
