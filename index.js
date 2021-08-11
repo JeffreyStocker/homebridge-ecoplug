@@ -10,7 +10,7 @@
 var eco = require('./lib/eco.js');
 var debug = require('debug')('EcoPlug');
 var Accessory, Service, Characteristic, UUIDGen, HAPServer;
-var accessories = [];
+var accessories = {};
 
 //default configuration
 const defaultIncomingPort = 9000;
@@ -78,7 +78,7 @@ EcoPlugPlatform.prototype.didFinishLaunching = function() {
 
 EcoPlugPlatform.prototype.devicePolling = function() {
   // Send a return status message every interval
-  for (var id in accessories) {
+  for (var id of Object.keys(accessories)) {
     var plug = accessories[id];
 
     debug("Poll:", id, plug.context.name);
