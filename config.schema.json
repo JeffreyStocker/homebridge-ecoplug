@@ -56,7 +56,7 @@
 				}
 			},
 			"deviceInactiveTimout": {
-				"title": "Set Device to Inactive Timeout",
+				"title": "Inactive Device Timeout",
 				"type": "number",
 				"required": false,
 				"description": "How long in seconds until a device is declared inactive when not responding. Use 0 for never set to inactive. Default: 30",

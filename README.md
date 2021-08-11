@@ -28,10 +28,16 @@ Configuration sample:
 
  ```JSON
 "platforms": [
-    {
+    {   //required
         "platform": "EcoPlug",
         "name": "EcoPlug",
-        "port": 9000
+        //optional
+        "port": 9000,
+        //advanced options, optional
+        "refresh": 10,
+        "cache_timeout": 60,
+        "deviceInactiveTimout": 30,
+        "deviceRemoveTimeout": 0,
     }
 ]
 ```
@@ -39,9 +45,20 @@ Configuration sample:
 
 Paramenter | Default | Required | Description
 -----------| ------- | -------- | -----------
-platform | EcoPlug | true | Links configuration information with plugin. Do not change. Must be "EcoPlug".
+platform | EcoPlug | true | Links configuration information with plugin. _**Do not change. Must be "EcoPlug"**_.
 name | EcoPlug | true | Plugin name as displayed in the Homebridge log
-port | 9000 | false | incoming port, must be open on the device to discover devices and receive messages. Must be between 0 and 65535.
+port | 9000 | false | Incoming port, must be open on the device to discover devices and receive messages. Must be between 0 and 65535.
+refresh | 10 | false | Plls devices for status updates. Use 0 for never (not recommended)
+cache_timeout | 60 | false | Clears internal cache after x seconds. Use 0 for never (not recommended)
+deviceInactiveTimeout | 30 | false | Set device to inactive after x seconds. Use 0 for never.
+deviceRemoveTimeout | 0 | false | Removed device from homebridge when not responding for x seconds. Use 0 for never.
+
+### Homebridge-config-ui-x
+These parameters are for homebridge-config-ui-x configuration only and there is no need to add or modify these.
+Paramenter | Default | Description
+-----------| ------- | -----------
+advanceOptions | false | Show or hides advance settings (currently: refresh, cache_timeout, deviceInactiveTimeout, deviceRemoveTimeout)
+
 
 # Firewalls
 
