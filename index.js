@@ -33,10 +33,11 @@ module.exports = function(homebridge) {
 
 function EcoPlugPlatform(log, config, api) {
   this.log = log;
-  this.cache_timeout = config['cache_timeout'] || defaultCacheTimeout; // seconds
-  this.refresh = convertToMilliseconds(config['refresh'] || defaultRefresh); // Update every 10 seconds
-  this.deviceRemoveTimeout = convertToMilliseconds(config['deviceRemoveTimeout'] || defaultDeviceRemoveTimeout);
-  this.deviceInactiveTimout = convertToMilliseconds(config['deviceInactiveTimout'] || defaultDeviceInactiveTimout);
+  this.cache_timeout = pickFirstDefined(config['cache_timeout'], defaultCacheTimeout); // seconds
+  this.refresh = convertToMilliseconds( pickFirstDefined(config['refresh'], defaultRefresh)); // Update every 10 seconds
+  this.deviceRemoveTimeout = convertToMilliseconds( pickFirstDefined(config['deviceRemoveTimeout'], defaultDeviceRemoveTimeout));
+  this.deviceInactiveTimout = convertToMilliseconds( pickFirstDefined(config['deviceInactiveTimout'], defaultDeviceInactiveTimout));
+  this.enabled = pickFirstDefined(config.enabled, defaultEnabled);
   this.config = config;
 
   if (api) {
@@ -54,7 +55,6 @@ EcoPlugPlatform.prototype.configureAccessory = function(accessory) {
 }
 
 EcoPlugPlatform.prototype.didFinishLaunching = function() {
-  console.log(this.enabled, 'is enabled')
   if (this.enabled) {
     eco.startUdpServer(this, this.config.port = defaultIncomingPort, function(message) {
       // handle status messages received from devices
@@ -72,7 +72,7 @@ EcoPlugPlatform.prototype.didFinishLaunching = function() {
     this.refresh > 0 && setInterval(this.devicePolling.bind(this), this.refresh); //polls discovered devices to check their status
     this.cache_timeout > 0 && setInterval(this.deviceDiscovery.bind(this), this.cache_timeout); //rechecks for new devices and inactivates inactive ones.
   } else {
-    this.log('disabled')
+    this.log('is disabled')
   }
 }
 
