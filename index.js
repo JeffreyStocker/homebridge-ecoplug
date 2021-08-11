@@ -7,7 +7,6 @@
 //]
 
 "use strict";
-
 var eco = require('./lib/eco.js');
 var debug = require('debug')('EcoPlug');
 var Accessory, Service, Characteristic, UUIDGen, HAPServer;
@@ -17,8 +16,8 @@ var accessories = [];
 const defaultIncomingPort = 9000;
 const defaultRefresh = 10; // Update every 10 seconds
 const defaultCacheTimeout = 60; // clear cache every 60 seconds
+const defaultDeviceInactiveTimout = defaultRefresh * 3; // set devices inactive after x number of seconds of no response, 0 is set to never;
 const defaultDeviceRemoveTimeout = 0; // remove any devices after x number of seconds if is missing, 0 is set to never;
-const defaultDeviceInactiveTimout = 0; // set devices inactive after x number of seconds of no response, 0 is set to never;
 
 module.exports = function(homebridge) {
 
@@ -35,7 +34,7 @@ function EcoPlugPlatform(log, config, api) {
   this.log = log;
   this.cache_timeout = config['cache_timeout'] || defaultCacheTimeout; // seconds
   this.refresh = convertToMilliseconds(config['refresh'] || defaultRefresh); // Update every 10 seconds
-  this.removeDeviceTimeout = convertToMilliseconds(config['deviceRemoveTimeout'] || defaultDeviceRemoveTimeout);
+  this.deviceRemoveTimeout = convertToMilliseconds(config['deviceRemoveTimeout'] || defaultDeviceRemoveTimeout);
   this.deviceInactiveTimout = convertToMilliseconds(config['deviceInactiveTimout'] || defaultDeviceInactiveTimout);
   this.config = config;
 
@@ -193,18 +192,22 @@ EcoPlugPlatform.prototype.sendStatusMessage = function(thisPlug, callback) {
     }
   }.bind(this));
 
-  if ((Date.now() - thisPlug.lastUpdated) > this.deviceRemoveTimeout && this.deviceRemoveTimeout !== 0) {
+  if (((Date.now() - thisPlug.lastUpdated) > this.deviceRemoveTimeout) && this.deviceRemoveTimeout !== 0) {
     // if not status update have not been recieved after deviceRemoveTimout, remove device
-    debug("Plug not responding. Removing Plug:", thisPlug.id, thisPlug.name);
-    this.log("Plug not responding. Removing Plug", thisPlug.id, thisPlug.name)
-    this.removeAccessory(thisPlug);
+    // debug("Plug not responding. Removing Plug:", thisPlug.id, thisPlug.name);
+    this.log("Removing Plug. Plug not responding", thisPlug.id, thisPlug.name)
+    this.removeAccessory(accessories[thisPlug.id]);
 
-  } else if ((Date.now() - thisPlug.lastUpdated) > this.deviceInactiveTimout && this.deviceInactiveTimout !== 0) {
+  } else if (((Date.now() - thisPlug.lastUpdated) > this.deviceInactiveTimout) && this.deviceInactiveTimout !== 0) {
     // If no status update received for 3 refresh cycles, mark as not available
-    debug("Plug not responding", thisPlug.id, thisPlug.name);
-    accessories[thisPlug.id].getService(Service.Outlet)
-      .getCharacteristic(Characteristic.On)
-      .updateValue(new Error("No Response"));
+    if (!(accessories[thisPlug.id].getService(Service.Outlet).getCharacteristic(Characteristic.On).status instanceof Error)) {
+      // debug("Plug not responding", thisPlug.id, thisPlug.name);
+      this.log("Set Plug to Inactive: Plug not responding", thisPlug.id, thisPlug.name)
+      accessories[thisPlug.id].getService(Service.Outlet)
+        .updateCharacteristic(Characteristic.On, new Error("No Response"))
+        // .getCharacteristic(Characteristic.On)
+        // .setValue(new Error("No Response"));
+    }
   }
 }
 
