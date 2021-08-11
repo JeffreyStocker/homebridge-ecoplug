@@ -39,7 +39,7 @@ Configuration sample:
 
 Paramenter | Default | Required | Description
 -----------| ------- | -------- | -----------
-platform | EcoPlug | true |
+platform | EcoPlug | true | Links configuration information with plugin. Do not change. Must be "EcoPlug".
 name | EcoPlug | true | Plugin name as displayed in the Homebridge log
 port | 9000 | false | incoming port, must be open on the device to discover devices and receive messages. Must be between 0 and 65535.
 
