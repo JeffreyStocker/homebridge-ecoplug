@@ -14,8 +14,8 @@ var accessories = {};
 
 //default configuration
 const defaultIncomingPort = 9000;
-const defaultRefresh = 10; // Update every 10 seconds
-const defaultCacheTimeout = 60; // clear cache every 60 seconds
+const defaultPollingInterval = 10; // Update every 10 seconds
+const defaultDiscoverInterval = 60; // clear cache every 60 seconds
 const defaultDeviceInactiveTimout = defaultRefresh * 3; // set devices inactive after x number of seconds of no response, 0 is set to never;
 const defaultDeviceRemoveTimeout = 0; // remove any devices after x number of seconds if is missing, 0 is set to never;
 const defaultEnabled = true;
@@ -33,8 +33,8 @@ module.exports = function(homebridge) {
 
 function EcoPlugPlatform(log, config, api) {
   this.log = log;
-  this.cache_timeout = pickFirstDefined(config['cache_timeout'], defaultCacheTimeout); // seconds
-  this.refresh = convertToMilliseconds( pickFirstDefined(config['refresh'], defaultRefresh)); // Update every 10 seconds
+  this.discoverInterval = pickFirstDefined(config['discoverInterval'], defaultDiscoverInterval); // seconds
+  this.pollingInterval = convertToMilliseconds( pickFirstDefined(config['pollingInterval'], defaultPollingInterval)); // Update every 10 seconds
   this.deviceRemoveTimeout = convertToMilliseconds( pickFirstDefined(config['deviceRemoveTimeout'], defaultDeviceRemoveTimeout));
   this.deviceInactiveTimout = convertToMilliseconds( pickFirstDefined(config['deviceInactiveTimout'], defaultDeviceInactiveTimout));
   this.enabled = pickFirstDefined(config.enabled, defaultEnabled);
@@ -69,8 +69,8 @@ EcoPlugPlatform.prototype.didFinishLaunching = function() {
     });
 
     this.deviceDiscovery(); //initial device discovery
-    this.refresh > 0 && setInterval(this.devicePolling.bind(this), this.refresh); //polls discovered devices to check their status
-    this.cache_timeout > 0 && setInterval(this.deviceDiscovery.bind(this), this.cache_timeout); //rechecks for new devices and inactivates inactive ones.
+    this.pollingInterval > 0 && setInterval(this.devicePolling.bind(this), this.pollingInterval); //polls discovered devices to check their status
+    this.discoverInterval > 0 && setInterval(this.deviceDiscovery.bind(this), this.discoverInterval); //rechecks for new devices and inactivates inactive ones.
   } else {
     this.log('is disabled')
   }
