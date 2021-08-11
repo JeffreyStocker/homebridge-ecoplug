@@ -6,6 +6,13 @@
 	"schema": {
 		"type": "object",
 		"properties": {
+			"enabled": {
+				"title": "Enabled",
+				"type": "boolean",
+				"required": false,
+				"default": true,
+				"description": "Enables this plugin"
+			},
 			"name": {
 				"title": "Name",
 				"type": "string",
@@ -37,14 +44,6 @@
 				"minimum": 0,
 				"placeholder": 60
 			},
-			"deviceRemoveTimeout": {
-				"title": "Remove Device Timeout",
-				"type": "number",
-				"required": false,
-				"description": "How long, in seconds, a device is removed from homebridge. Use 0 to never remove a device. Default: 0",
-				"minimum": 0,
-				"placeholder": 0
-			},
 			"deviceInactiveTimout": {
 				"title": "Set Device to Inactive Timeout",
 				"type": "number",
@@ -52,6 +51,14 @@
 				"description": "How long in seconds until a device is declared inactive when not responding. Use 0 for never set to inactive. Default: 30",
 				"minimum": 0,
 				"placeholder": 30
+			},
+			"deviceRemoveTimeout": {
+				"title": "Remove Device Timeout",
+				"type": "number",
+				"required": false,
+				"description": "How long, in seconds, a device is removed from homebridge. Use 0 to never remove a device. Default: 0",
+				"minimum": 0,
+				"placeholder": 0
 			}
 		}
 	}

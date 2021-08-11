@@ -18,6 +18,7 @@ const defaultRefresh = 10; // Update every 10 seconds
 const defaultCacheTimeout = 60; // clear cache every 60 seconds
 const defaultDeviceInactiveTimout = defaultRefresh * 3; // set devices inactive after x number of seconds of no response, 0 is set to never;
 const defaultDeviceRemoveTimeout = 0; // remove any devices after x number of seconds if is missing, 0 is set to never;
+const defaultEnabled = true;
 
 module.exports = function(homebridge) {
 
@@ -53,22 +54,26 @@ EcoPlugPlatform.prototype.configureAccessory = function(accessory) {
 }
 
 EcoPlugPlatform.prototype.didFinishLaunching = function() {
+  console.log(this.enabled, 'is enabled')
+  if (this.enabled) {
+    eco.startUdpServer(this, this.config.port = defaultIncomingPort, function(message) {
+      // handle status messages received from devices
 
-  eco.startUdpServer(this, this.config.port = defaultIncomingPort, function(message) {
-    // handle status messages received from devices
+      var accessory = accessories[message.id];
 
-    var accessory = accessories[message.id];
+      accessory.getService(Service.Outlet)
+        .getCharacteristic(Characteristic.On)
+        .updateValue(message.status);
 
-    accessory.getService(Service.Outlet)
-      .getCharacteristic(Characteristic.On)
-      .updateValue(message.status);
+      accessory.context.lastUpdated = Date.now();
+    });
 
-    accessory.context.lastUpdated = Date.now();
-  });
-
-  this.deviceDiscovery(); //initial device discovery
-  this.refresh > 0 && setInterval(this.devicePolling.bind(this), this.refresh); //polls discovered devices to check their status
-  this.cache_timeout > 0 && setInterval(this.deviceDiscovery.bind(this), this.cache_timeout); //rechecks for new devices and inactivates inactive ones.
+    this.deviceDiscovery(); //initial device discovery
+    this.refresh > 0 && setInterval(this.devicePolling.bind(this), this.refresh); //polls discovered devices to check their status
+    this.cache_timeout > 0 && setInterval(this.deviceDiscovery.bind(this), this.cache_timeout); //rechecks for new devices and inactivates inactive ones.
+  } else {
+    this.log('disabled')
+  }
 }
 
 EcoPlugPlatform.prototype.devicePolling = function() {
@@ -231,4 +236,12 @@ EcoPlugPlatform.prototype.removeAccessory = function(accessory) {
 
 const convertToMilliseconds = function convertToSeconds(seconds) {
   return seconds * 1000;
+}
+
+const pickFirstDefined = function pickFirstDefined(...options) {
+  for (let option of options) {
+    if (option !== undefined) {
+      return option
+    }
+  }
 }
