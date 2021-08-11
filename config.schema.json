@@ -25,24 +25,35 @@
 				"type": "number",
 				"required": false,
 				"default": 9000,
-				"description": "Port used for outgoing communication with ecoplugs",
+				"description": "Port used for incoming communication with ecoplugs. Ensure that this port is open to incoming communications",
 				"minimum": 0,
         "maximum": 65535
+			},
+			"advanceOptions": {
+				"title": "Advance Options",
+				"description": "Show advance options",
+				"type": "boolean"
 			},
 			"refresh": {
 				"title": "Status Polling Interval",
 				"type": "number",
 				"required": false,
-				"description": "How long in seconds to poll devices for changes in their status. Use 0 for never poll device status (not recommended). Default: 10",
-				"placeholder": 10
+				"description": "How long in seconds to poll devices for changes in their status. Use 0 to never poll devices' status (not recommended). Default: 10",
+				"placeholder": 10,
+				"condition": {
+					"functionBody": "return model.advanceOptions === true;"
+				}
 			},
 			"cache_timeout": {
 				"title": "Discovery Interval",
 				"type": "number",
 				"required": false,
-				"description": "How long in seconds until Homebridge searches for new devices. Use 0 for never search for new devices (not recommended). Default: 60",
+				"description": "How long in seconds until Homebridge searches for new devices. Use 0 to never search for new devices (not recommended). Default: 60",
 				"minimum": 0,
-				"placeholder": 60
+				"placeholder": 60,
+				"condition": {
+					"functionBody": "return model.advanceOptions === true;"
+				}
 			},
 			"deviceInactiveTimout": {
 				"title": "Set Device to Inactive Timeout",
@@ -50,7 +61,10 @@
 				"required": false,
 				"description": "How long in seconds until a device is declared inactive when not responding. Use 0 for never set to inactive. Default: 30",
 				"minimum": 0,
-				"placeholder": 30
+				"placeholder": 30,
+				"condition": {
+					"functionBody": "return model.advanceOptions === true;"
+				}
 			},
 			"deviceRemoveTimeout": {
 				"title": "Remove Device Timeout",
@@ -58,7 +72,10 @@
 				"required": false,
 				"description": "How long, in seconds, a device is removed from homebridge. Use 0 to never remove a device. Default: 0",
 				"minimum": 0,
-				"placeholder": 0
+				"placeholder": 0,
+				"condition": {
+					"functionBody": "return model.advanceOptions === true;"
+				}
 			}
 		}
 	}
