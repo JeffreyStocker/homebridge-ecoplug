@@ -34,7 +34,7 @@
 				"description": "Show advance options",
 				"type": "boolean"
 			},
-			"refresh": {
+			"pollingInterval": {
 				"title": "Status Polling Interval",
 				"type": "number",
 				"required": false,
@@ -44,7 +44,7 @@
 					"functionBody": "return model.advanceOptions === true;"
 				}
 			},
-			"cache_timeout": {
+			"discoverInterval": {
 				"title": "Discovery Interval",
 				"type": "number",
 				"required": false,
