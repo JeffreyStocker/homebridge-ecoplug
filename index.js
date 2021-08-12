@@ -61,9 +61,9 @@ EcoPlugPlatform.prototype.didFinishLaunching = function() {
       var accessory = accessories[message.id];
 
       //check if error, and logs message if changing from error
-      if (accessories[thisPlug.id].getService(Service.Outlet).getCharacteristic(Characteristic.On).status instanceof Error) {
+      if (accessories[message.id].getService(Service.Outlet).getCharacteristic(Characteristic.On).status instanceof Error) {
         const accessoryInfo = accessory.getService(Service.AccessoryInformation)
-        this.log('Plug set to active', accessoryInfo.getCharacteristic(Characteristic.SerialNumber), accessoryInfo.getCharacteristic(Characteristic.accessoryId))
+        this.log('Plug set to active', accessoryInfo.getCharacteristic(message.id), accessoryInfo.getCharacteristic(Characteristic.name))
       }
 
       accessory.getService(Service.Outlet)
