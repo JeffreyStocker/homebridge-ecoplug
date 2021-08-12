@@ -55,7 +55,7 @@
 					"functionBody": "return model.advanceOptions === true;"
 				}
 			},
-			"deviceInactiveTimout": {
+			"deviceInactiveTimeout": {
 				"title": "Inactive Device Timeout",
 				"type": "number",
 				"required": false,

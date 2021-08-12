@@ -36,7 +36,7 @@ Configuration sample:
         //advanced options, optional
         "pollingInterval": 10,
         "discoverInterval": 60,
-        "deviceInactiveTimout": 30,
+        "deviceInactiveTimeout": 30,
         "deviceRemoveTimeout": 0,
     }
 ]

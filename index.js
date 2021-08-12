@@ -35,8 +35,8 @@ function EcoPlugPlatform(log, config, api) {
   this.log = log;
   this.discoverInterval = pickFirstDefined(config['discoverInterval'], defaultDiscoverInterval); // seconds
   this.pollingInterval = convertToMilliseconds( pickFirstDefined(config['pollingInterval'], defaultPollingInterval)); // Update every 10 seconds
-  this.deviceRemoveTimeout = convertToMilliseconds( pickFirstDefined(config['deviceRemoveTimeout'], defaultDeviceRemoveTimeout));
-  this.deviceInactiveTimout = convertToMilliseconds( pickFirstDefined(config['deviceInactiveTimout'], defaultDeviceInactiveTimeout));
+  this.deviceRemoveTimeout = convertToMilliseconds( pickFirstDefined(config['deviceInactiveTimeout'], defaultDeviceRemoveTimeout));
+  this.deviceInactiveTimout = convertToMilliseconds( pickFirstDefined(config['deviceInactiveTimeout'], defaultDeviceInactiveTimeout));
   this.enabled = pickFirstDefined(config.enabled, defaultEnabled);
   this.config = config;
 
