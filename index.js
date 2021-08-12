@@ -16,7 +16,7 @@ var accessories = {};
 const defaultIncomingPort = 9000;
 const defaultPollingInterval = 10; // Update every 10 seconds
 const defaultDiscoverInterval = 60; // clear cache every 60 seconds
-const defaultDeviceInactiveTimout = defaultRefresh * 3; // set devices inactive after x number of seconds of no response, 0 is set to never;
+const defaultDeviceInactiveTimeout = defaultDiscoverInterval * 3; // set devices inactive after x number of seconds of no response, 0 is set to never;
 const defaultDeviceRemoveTimeout = 0; // remove any devices after x number of seconds if is missing, 0 is set to never;
 const defaultEnabled = true;
 
@@ -36,7 +36,7 @@ function EcoPlugPlatform(log, config, api) {
   this.discoverInterval = pickFirstDefined(config['discoverInterval'], defaultDiscoverInterval); // seconds
   this.pollingInterval = convertToMilliseconds( pickFirstDefined(config['pollingInterval'], defaultPollingInterval)); // Update every 10 seconds
   this.deviceRemoveTimeout = convertToMilliseconds( pickFirstDefined(config['deviceRemoveTimeout'], defaultDeviceRemoveTimeout));
-  this.deviceInactiveTimout = convertToMilliseconds( pickFirstDefined(config['deviceInactiveTimout'], defaultDeviceInactiveTimout));
+  this.deviceInactiveTimout = convertToMilliseconds( pickFirstDefined(config['deviceInactiveTimout'], defaultDeviceInactiveTimeout));
   this.enabled = pickFirstDefined(config.enabled, defaultEnabled);
   this.config = config;
 
