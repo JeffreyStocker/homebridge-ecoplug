@@ -58,8 +58,13 @@ EcoPlugPlatform.prototype.didFinishLaunching = function() {
   if (this.enabled) {
     eco.startUdpServer(this, this.config.port = defaultIncomingPort, function(message) {
       // handle status messages received from devices
-
       var accessory = accessories[message.id];
+
+      //check if error, and logs message if changing from error
+      if (accessories[thisPlug.id].getService(Service.Outlet).getCharacteristic(Characteristic.On).status instanceof Error) {
+        const accessoryInfo = accessory.getService(Service.AccessoryInformation)
+        this.log('Plug set to active', accessoryInfo.getCharacteristic(Characteristic.SerialNumber), accessoryInfo.getCharacteristic(Characteristic.accessoryId))
+      }
 
       accessory.getService(Service.Outlet)
         .getCharacteristic(Characteristic.On)
