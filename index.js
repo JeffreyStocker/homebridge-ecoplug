@@ -36,7 +36,7 @@ function EcoPlugPlatform(log, config, api) {
   this.discoverInterval = pickFirstDefined(config['discoverInterval'], defaultDiscoverInterval); // seconds
   this.pollingInterval = convertToMilliseconds( pickFirstDefined(config['pollingInterval'], defaultPollingInterval)); // Update every 10 seconds
   this.deviceRemoveTimeout = convertToMilliseconds( pickFirstDefined(config['deviceInactiveTimeout'], defaultDeviceRemoveTimeout));
-  this.deviceInactiveTimout = convertToMilliseconds( pickFirstDefined(config['deviceInactiveTimeout'], defaultDeviceInactiveTimeout));
+  this.deviceInactiveTimeout = convertToMilliseconds( pickFirstDefined(config['deviceInactiveTimeout'], defaultDeviceInactiveTimeout));
   this.enabled = pickFirstDefined(config.enabled, defaultEnabled);
   this.config = config;
 
@@ -208,7 +208,7 @@ EcoPlugPlatform.prototype.sendStatusMessage = function(thisPlug, callback) {
     this.log("Removing Plug. Plug not responding", thisPlug.id, thisPlug.name)
     this.removeAccessory(accessories[thisPlug.id]);
 
-  } else if (((Date.now() - thisPlug.lastUpdated) > this.deviceInactiveTimout) && this.deviceInactiveTimout !== 0) {
+  } else if (((Date.now() - thisPlug.lastUpdated) > this.deviceInactiveTimeout) && this.deviceInactiveTimeout !== 0) {
     // If no status update received for 3 refresh cycles, mark as not available
     if (!(accessories[thisPlug.id].getService(Service.Outlet).getCharacteristic(Characteristic.On).status instanceof Error)) {
       // debug("Plug not responding", thisPlug.id, thisPlug.name);
