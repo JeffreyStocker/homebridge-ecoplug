@@ -71,7 +71,7 @@ EcoPlugPlatform.prototype.didFinishLaunching = function() {
         .updateValue(message.status);
 
       accessory.context.lastUpdated = Date.now();
-    });
+    }.bind(this));
 
     this.deviceDiscovery(); //initial device discovery
     this.pollingInterval > 0 && setInterval(this.devicePolling.bind(this), this.pollingInterval); //polls discovered devices to check their status
