@@ -33,7 +33,7 @@ module.exports = function(homebridge) {
 
 function EcoPlugPlatform(log, config, api) {
   this.log = log;
-  this.discoverInterval = pickFirstDefined(config['discoverInterval'], defaultDiscoverInterval); // seconds
+  this.discoverInterval = convertToMilliseconds( pickFirstDefined(config['discoverInterval'], defaultDiscoverInterval)); // seconds
   this.pollingInterval = convertToMilliseconds( pickFirstDefined(config['pollingInterval'], defaultPollingInterval)); // Update every 10 seconds
   this.deviceRemoveTimeout = convertToMilliseconds( pickFirstDefined(config['deviceRemoveTimeout'], defaultDeviceRemoveTimeout));
   this.deviceInactiveTimeout = convertToMilliseconds( pickFirstDefined(config['deviceInactiveTimeout'], defaultDeviceInactiveTimeout));
