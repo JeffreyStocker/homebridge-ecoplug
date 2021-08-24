@@ -56,7 +56,7 @@ EcoPlugPlatform.prototype.configureAccessory = function(accessory) {
 
 EcoPlugPlatform.prototype.didFinishLaunching = function() {
   if (this.enabled) {
-    eco.startUdpServer(this, this.config.port = defaultIncomingPort, function(message) {
+    eco.startUdpServer(this, this.config.port = defaultIncomingPort, function(err, message) {
       // handle status messages received from devices
       var accessory = accessories[message.id];
 
