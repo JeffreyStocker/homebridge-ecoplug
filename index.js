@@ -70,6 +70,9 @@ EcoPlugPlatform.prototype.didFinishLaunching = function() {
         .getCharacteristic(Characteristic.On)
         .updateValue(message.status);
 
+      accessory.getCharacteristic(Characteristic.On)
+        .onGet(this.handleOnGet);
+
       accessory.context.lastUpdated = Date.now();
     }.bind(this));
 
@@ -79,6 +82,15 @@ EcoPlugPlatform.prototype.didFinishLaunching = function() {
   } else {
     this.log('is disabled')
   }
+}
+
+EcoPlugPlatform.prototype.handleOnGet = function () {
+  return new Promise((resolve, revoke) => {
+    resolve(accessory.getCharacteristic(Characteristic.on).value);
+    this.sendStatusMessage(accessory.context, (err) => {
+      revoke(err);
+    });
+  });
 }
 
 EcoPlugPlatform.prototype.devicePolling = function() {
