@@ -70,7 +70,8 @@ EcoPlugPlatform.prototype.didFinishLaunching = function() {
         .getCharacteristic(Characteristic.On)
         .updateValue(message.status);
 
-      accessory.getCharacteristic(Characteristic.On)
+      accessory.getService(Service.Outlet)
+        .getCharacteristic(Characteristic.On)
         .onGet(this.handleOnGet);
 
       accessory.context.lastUpdated = Date.now();
