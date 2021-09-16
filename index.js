@@ -72,7 +72,7 @@ EcoPlugPlatform.prototype.didFinishLaunching = function() {
 
       accessory.getService(Service.Outlet)
         .getCharacteristic(Characteristic.On)
-        .onGet(this.handleOnGet);
+        .onGet(() => this.handleOnGet(accessory));
 
       accessory.context.lastUpdated = Date.now();
     }.bind(this));
@@ -85,7 +85,8 @@ EcoPlugPlatform.prototype.didFinishLaunching = function() {
   }
 }
 
-EcoPlugPlatform.prototype.handleOnGet = function () {
+EcoPlugPlatform.prototype.handleOnGet = function(accessory) {
+  console.log(this)
   return new Promise((resolve, revoke) => {
     resolve(accessory.getCharacteristic(Characteristic.on).value);
     this.sendStatusMessage(accessory.context, (err) => {
